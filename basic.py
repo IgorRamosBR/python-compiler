@@ -41,7 +41,6 @@ def lex(filecontent):
 
 def parse(toks):
     i = 0
-    print(toks)
     while (i < len(toks)):
         if toks[i] + " " + toks[i + 1][0:6] == "PRINT STRING":
             print(toks[i + 1][7:])
