@@ -39,8 +39,17 @@ def lex(filecontent):
     #print(tokens)
 
 
+def parse(toks):
+    i = 0
+    print(toks)
+    while (i < len(toks)):
+        if toks[i] + " " + toks[i + 1][0:6] == "PRINT STRING":
+            print(toks[i + 1][7:])
+            i += 2
+
+
 def run():
     data = open_file(argv[1])
-    lex(data)
-
+    toks = lex(data)
+    parse(toks)
 run()
