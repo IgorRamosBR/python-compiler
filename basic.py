@@ -13,6 +13,8 @@ def lex(filecontent):
     token = ""
     state = 0
     isexpr = 0
+    varstarted = 0
+    var = ""
     string = ""
     expr = ""
     n = ""
@@ -31,7 +33,25 @@ def lex(filecontent):
             elif expr != "" and isexpr == 0:
                 tokens.append("NUM:" + expr)
                 expr = ""
+            elif var != "":
+                 tokens.append("VAR:" + var)
+                 var = "" 
+                varstarted = 0
             token = ""
+        elif token = "=" and state  == 0:
+            if var != "":
+                 tokens.append("VAR:" + var)
+                 var = "" 
+                varstarted = 0
+            tokens.append("EQUALS")
+            tok = ""     
+        elif token == "$" and state == 0:
+            varstarted = 1   
+            var += token
+            token = ""
+        elif varstarted == 1:
+            var += token
+            token = "" 
         elif token.isdigit():
             expr += token
             token = ""

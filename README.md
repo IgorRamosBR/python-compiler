@@ -1,4 +1,4 @@
-# Pré Requisitos
+﻿# Pré Requisitos
 Ter o Python na versão 3 instalado
 
 # Para Rodar
