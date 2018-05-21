@@ -40,11 +40,17 @@ def lex(filecontent):
                 varstarted = 0
             token = ""
         elif token = "=" and state  == 0:
+            if expr != "" and isexpr == 0:
+                tokens.append("NUM:" + expr)
+                expr = ""
             if var != "":
                  tokens.append("VAR:" + var)
                  var = "" 
                 varstarted = 0
-            tokens.append("EQUALS")
+            if tokens[-1] == "EQUALS":
+                tokens[-1] = "EQEQ"
+            else:    
+                tokens.append("EQUALS")
             token = ""     
        
         elif token == "$" and state == 0:
@@ -66,10 +72,27 @@ def lex(filecontent):
             isexpr = 1
             expr += token
             token = ""
+        elif token == "\t":
+             token = ""
         elif token == "PRINT":
             tokens.append("PRINT")
             token = ""
-        elif token == "\"":
+        elif token == "IF":
+            tokens.append("IF")
+            token = ""
+        elif token == "ENDIF":
+            tokens.append("ENDIF")
+            token = ""
+        elif token == "THEN":
+            if expr != "" and isexpr == 0:
+                tokens.append("NUM:" + expr)
+                expr = ""
+            tokens.append("THEN")
+            token = ""
+        elif token == "INPUT":
+            tokens.append("INPUT")
+            token = ""
+        elif token == "\"" or token == " \"":
             if state == 0:
                 state = 1
             elif state == 1:
@@ -109,6 +132,10 @@ def getVARIABLE(varname):
         return "Variable Error: Undefined Variable"
         exit()
 
+def getINPUT(string, varname):
+    i = input(string[1:-1] + " ")
+    symbols[varname] = "STRING:\"" + i + "\""
+
 def parse(toks):
     i = 0
     while (i < len(toks)):
@@ -132,6 +159,10 @@ def parse(toks):
                 elif toks[i+2][0:3] == "VAR":
                 doASSIGN(toks[i],getVARIABLE(toks[i+2]))
             i += 3
+        elif toks[i] + " " + toks[i+1][0:6] + " " + toks[i+2][0:3] == "INPUT STRING VAR":
+            getINPUT(toks[i+1][7:],toks[i+2][4:])
+            i += 3
+        #INPUT STRING:"" VAR:$VARIABLE       
         #print (symbols)
 
 
