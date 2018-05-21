@@ -68,7 +68,7 @@ def lex(filecontent):
         elif token.isdigit():
             expr += token
             token = ""
-        elif token == "+" or token == "-" or token == "/" or token== "*" or token == "(" or token == ")":
+        elif token == "+" or token == "-" or token == "/" or token == "*" or token == "(" or token == ")":
             isexpr = 1
             expr += token
             token = ""
