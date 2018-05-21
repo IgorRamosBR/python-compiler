@@ -2,6 +2,7 @@ from sys import *
 
 tokens = []
 num_stack = []
+symbols = {}
 
 def open_file(filename):
     data = open(filename, "r").read()
@@ -75,6 +76,7 @@ def lex(filecontent):
             token = ""
     
     #print(tokens)
+    #return ''
     return tokens
 
 def evalExpression(expr):
@@ -90,6 +92,9 @@ def doPRINT(toPRINT):
         toPRINT = evalExpression(toPRINT[5:])
     print(toPRINT)
 
+def doASSIGN(varname, varvalue):
+    symbols[varname[4:]] = varvalue
+
 
 def parse(toks):
     i = 0
@@ -102,6 +107,15 @@ def parse(toks):
             elif toks[i+1][0:4] == "EXPR":
                 doPRINT(toks[i + 1])
             i += 2
+        if toks[i][0:3] + " " + toks[i+1] + " " + toks[i+2][0:6] == "VAR EQUALS STRING" or toks[i][0:3] + " " + toks[i+1] + " " + toks[i+2][0:3] == "VAR EQUALS NUM" or toks[i][0:3] + " " + toks[i+1] + " " + toks[i+2][0:4] == "VAR EQUALS EXPR":
+            if toks[i+1][0:6] == "STRING":
+                doASSIGN(toks[i],toks[i+2])
+            elif toks[i+1][0:3] == "NUM":
+                doASSIGN(toks[i],toks[i+2])
+            elif toks[i+1][0:4] == "EXPR":
+                doASSIGN(evalExpression(toks[i],toks[i+2]))
+            i += 3
+        print (symbols)
 
 
 def run():
