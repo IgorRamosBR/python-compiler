@@ -105,8 +105,8 @@ def lex(filecontent):
             token = ""
     
     print(tokens)
-    return ''
-    #return tokens
+    #return ''
+    return tokens
 
 def evalExpression(expr):
     return eval(expr)
@@ -139,7 +139,9 @@ def getINPUT(string, varname):
 def parse(toks):
     i = 0
     while (i < len(toks)):
-        if toks[i] + " " + toks[i + 1][0:6] == "PRINT STRING" or toks[i] + " " + toks[i + 1][0:3] == "PRINT NUM" or toks[i] + " " + toks[i + 1][0:3] == "PRINT VAR":
+        if toks[i] == "ENDIF":
+            i+=1
+        elif toks[i] + " " + toks[i + 1][0:6] == "PRINT STRING" or toks[i] + " " + toks[i + 1][0:3] == "PRINT NUM" or toks[i] + " " + toks[i + 1][0:3] == "PRINT VAR":
             if toks[i+1][0:6] == "STRING":
                 doPRINT(toks[i + 1])
             elif toks[i+1][0:3] == "NUM":
@@ -162,6 +164,14 @@ def parse(toks):
         elif toks[i] + " " + toks[i+1][0:6] + " " + toks[i+2][0:3] == "INPUT STRING VAR":
             getINPUT(toks[i+1][7:],toks[i+2][4:])
             i += 3
+        elif toks[i] + " " + toks[i+1][0:3] + " " + toks[i+2] + " " + toks[i+3][0:3] + " " + toks[i+4] == "IF NUM EQEQ NUM THEN":
+            
+            if toks[i+1][4:] == toks[i+3][4:]:
+                print("True")
+            else 
+                print ("False")
+
+            i += 5
         #INPUT STRING:"" VAR:$VARIABLE       
         #print (symbols)
 
