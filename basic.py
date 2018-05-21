@@ -35,17 +35,17 @@ def lex(filecontent):
                 tokens.append("NUM:" + expr)
                 expr = ""
             elif var != "":
-                 tokens.append("VAR:" + var)
-                 var = "" 
+                tokens.append("VAR:" + var)
+                var = "" 
                 varstarted = 0
             token = ""
-        elif token = "=" and state  == 0:
+        elif token == "=" and state  == 0:
             if expr != "" and isexpr == 0:
                 tokens.append("NUM:" + expr)
                 expr = ""
             if var != "":
-                 tokens.append("VAR:" + var)
-                 var = "" 
+                tokens.append("VAR:" + var)
+                var = "" 
                 varstarted = 0
             if tokens[-1] == "EQUALS":
                 tokens[-1] = "EQEQ"
@@ -73,7 +73,7 @@ def lex(filecontent):
             expr += token
             token = ""
         elif token == "\t":
-             token = ""
+            token = ""
         elif token == "PRINT":
             tokens.append("PRINT")
             token = ""
