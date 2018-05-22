@@ -1,5 +1,6 @@
 from sys import *
 from lexer import Lexer
+from parse import Parser
 
 def open_file(filename):
   data = open(filename, "r").read()
@@ -10,8 +11,10 @@ def open_file(filename):
 def run():
     data = open_file(argv[1])
     lexer = Lexer(data)
-    lexer.lex()
-
+    tokens = lexer.lex()
+    
+    parser = Parser(tokens)
+    parser.parse()
  #toks = lex(data)
  #parse(toks)
 

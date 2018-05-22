@@ -55,6 +55,6 @@ class Lexer(object):
             elif (self.verificaEAdicionaString(tok)):
                 tok = ""
         
-        print(self.tokens)
+        return self.tokens
             
 
