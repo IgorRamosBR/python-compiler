@@ -1,14 +1,13 @@
 #lexer.py
 class Lexer(object):
     state = 0 #Se for igual a um que dizer que todo caracter será parte de uma string
-    tokens = []
+    tokens = [] #Lista de Tokens
     isexpr = 0 #Flag que verifica se está numa expressão
-    varstarted = 0
-    var = ""
+    varstarted = 0 #Flag que verifica se está numa variável
+    var = "" #Contém a váriavel
     string = "" #Contém a string delimitada por " "
     expr = ""  #Armazena as expressões
-    n = ""
-    filecontents = []
+    filecontents = [] #Arquivo texto
 
     def __init__(self, filecontent):
         self.filecontents = list(filecontent)
@@ -22,6 +21,38 @@ class Lexer(object):
     
     def verificarFinalLinhaEDocumento(self, tok):
         if tok == "\n" or tok == "<E0F>":
+            return True
+
+    def verificaExpressaoOuNumero(self):
+        if self.expr != "" and self.isexpr == 1:
+            self.tokens.append("EXPR:" + self.expr)
+            return True
+        elif self.expr != "" and self.isexpr == 0:
+            self.tokens.append("NUM:" + self.expr)
+            return True
+
+    def verificaVariavel(self):
+        if self.var != "":
+            self.tokens.append("VAR:" + self.var)
+            self.varstarted = 0
+            return True
+
+    def verificaSinalIgual(self, tok):
+        if tok == "=" and self.state == 0:
+            if self.verificaExpressaoOuNumero() and self.isexpr == 0:
+                    self.expr = ""
+            if self.verificaVariavel():
+                self.var = ""
+            if self.tokens[-1] == "EQUALS": #VERIFICA SE EXISTE UM == USADO PARA COMPARACAO
+                self.tokens[-1] = "EQEQ"
+            else:
+                self.tokens.append("EQUALS")
+            return True
+
+    def verificaDelimitadorVariavel(self, tok): 
+        if (tok == "$" and self.state == 0):
+            self.varstarted = 1
+            self.var += tok
             return True
 
     def verificaKeywordPrint(self, tok):
@@ -39,9 +70,36 @@ class Lexer(object):
                 self.state = 0
                 return True
 
-    def verificaEAdicionaString(self, tok):
+    def verificaTabulacao(self, tok):
+        if tok == "\t":
+            return True
+
+    def verificaString(self, tok):
         if self.state == 1:
             self.string += tok
+            return True
+
+    def verificaKeywordIf(self, tok):
+        if tok == "IF" or tok == "if":
+            self.tokens.append("IF")
+            return True
+
+    def verificaKeywordEndif(self, tok):
+        if tok == "ENDIF" or tok == "endif":
+            self.tokens.append("ENDIF")
+            return True
+
+    def verificaKeywordThen(self, tok):
+        if tok == "THEN" or tok == "then":
+            if self.expr != "" and self.isexpr == 0:
+                self.tokens.append("NUM:" + self.expr)
+                self.expr = ""
+            self.tokens.append("THEN")
+            return True
+
+    def verificaKeywordInput(self, tok):
+        if tok == "INPUT" or tok == "input":
+            self.tokens.append("INPUT")
             return True
 
     def isNumero(self, tok):
@@ -55,12 +113,14 @@ class Lexer(object):
             self.expr += tok
             return True
 
-    def isExpressaoOuNumero(self):
-        if self.expr != "" and self.isexpr == 1:
-            self.tokens.append("EXPR:" + self.expr)
-            return True
-        elif self.expr != "" and self.isexpr == 0:
-            self.tokens.append("NUM:" + self.expr)
+    def isVariavel(self, tok):
+        if self.varstarted == 1:
+            if tok == "<" or tok == ">":
+                    if self.var != "":
+                        self.tokens.append("VAR:" + self.var)
+                        self.var = ""
+                        self.varstarted = 0
+            self.var += tok
             return True
 
     def lex(self):
@@ -72,68 +132,38 @@ class Lexer(object):
             if(self.ignoraEspacoVazio(tok)):
                 tok = ""
             elif (self.verificarFinalLinhaEDocumento(tok)):
-                if(self.isExpressaoOuNumero()):
+                if(self.verificaExpressaoOuNumero()):
                     self.expr = ""
-                elif self.var != "":
-                    self.tokens.append("VAR:" + self.var)
+                elif (self.verificaVariavel()):
                     self.var = ""
-                    self.varstarted = 0
                 tok = ""
-            elif tok == "=" and self.state == 0:
-                if self.expr != "" and self.isexpr == 0:
-                    self.tokens.append("NUM:" + self.expr)
-                    self.expr = ""
-                if self.var != "":
-                    self.tokens.append("VAR:" + self.var)
-                    self.var = ""
-                    self.varstarted = 0
-                if self.tokens[-1] == "EQUALS":
-                    self.tokens[-1] = "EQEQ"
-                else:
-                    self.tokens.append("EQUALS")
+            elif (self.verificaSinalIgual(tok)):
                 tok = ""
-            elif (tok == "$" and self.state == 0):
-                self.varstarted = 1
-                self.var += tok
+            elif(self.verificaDelimitadorVariavel(tok)):
                 tok = ""
-            elif self.varstarted == 1:
-                if tok == "<" or tok == ">":
-                    if self.var != "":
-                        self.tokens.append("VAR:" + self.var)
-                        self.var = ""
-                        self.varstarted = 0
-                self.var += tok
+            elif (self.isVariavel(tok)):
                 tok = ""
             elif (self.verificaKeywordPrint(tok)):
                 tok = ""
-            elif tok == "\t":
+            elif (self.verificaTabulacao(tok)):
                 tok = ""  
             elif (self.verificaDelimitadorString(tok)):
                 tok = ""
-            elif (self.verificaEAdicionaString(tok)):
+            elif (self.verificaString(tok)):
                 tok = ""
-            elif tok == "IF" or tok == "if":
-                self.tokens.append("IF")
+            elif (self.verificaKeywordIf(tok)):
                 tok = ""
-            elif tok == "ENDIF" or tok == "endif":
-                self.tokens.append("ENDIF")
+            elif (self.verificaKeywordEndif(tok)):
                 tok = ""
-            elif tok == "THEN" or tok == "then":
-                if self.expr != "" and self.isexpr == 0:
-                    self.tokens.append("NUM:" + self.expr)
-                    self.expr = ""
-                self.tokens.append("THEN")
+            elif (self.verificaKeywordThen(tok)):
                 tok = ""
-            elif tok == "INPUT" or tok == "input":
-                self.tokens.append("INPUT")
+            elif (self.verificaKeywordInput(tok)):
                 tok = ""
             elif (self.isNumero(tok)):
                 tok = ""
             elif (self.isOperador(tok)):
                 tok = ""
 
-        #print (self.tokens)
-        #return ''
         return self.tokens
             
 
