@@ -72,9 +72,32 @@ class Lexer(object):
             if(self.ignoraEspacoVazio(tok)):
                 tok = ""
             elif (self.verificarFinalLinhaEDocumento(tok)):
-                tok = ""
                 if(self.isExpressaoOuNumero()):
                     self.expr = ""
+                elif self.var != "":
+                    self.tokens.append("VAR:" + self.var)
+                    self.var = ""
+                    self.varstarted = 0
+                tok = ""
+            elif tok == "=" and self.state == 0:
+                if self.var != "":
+                    self.tokens.append("VAR:" + self.var)
+                    self.var = ""
+                    self.varstarted = 0
+                self.tokens.append("EQUALS")
+                tok = ""
+            elif (tok == "$" and self.state == 0):
+                self.varstarted = 1
+                self.var += tok
+                tok = ""
+            elif self.varstarted == 1:
+                if tok == "<" or tok == ">":
+                    if self.var != "":
+                        self.tokens.append("VAR:" + self.var)
+                        self.var = ""
+                        self.varstarted = 0
+                self.var += tok
+                tok = ""
             elif (self.verificaKeywordPrint(tok)):
                 tok = ""
             elif (self.verificaDelimitadorString(tok)):
@@ -86,6 +109,8 @@ class Lexer(object):
             elif (self.isOperador(tok)):
                 tok = ""
 
+        #print (self.tokens)
+        #return ''
         return self.tokens
             
 

@@ -1,4 +1,4 @@
-PRINT 5 + 10 * ( 2 + 5)
-PRINT "HELLO WORlD"
-PRINT "Igor"
-
+PRINT 5 + 6
+PRINT "HELLO"
+$VAR = 10 + 5
+PRINT $VAR
