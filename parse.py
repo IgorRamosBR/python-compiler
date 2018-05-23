@@ -44,13 +44,15 @@ class Parser(object):
             if(self.verificaPrint(i)):
                 self.doPrint(self.toks[i+1])
                 i += 2
-            elif self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:6] == "VAR EQUALS STRING"  or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:3] == "VAR EQUALS NUM" or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:4] == "VAR EQUALS EXPR" or self.toks[i] + " " + self.toks[i+1][0:3] == "PRINT VAR":
+            elif self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:6] == "VAR EQUALS STRING"  or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:3] == "VAR EQUALS NUM" or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:4] == "VAR EQUALS EXPR" or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:3] == "VAR EQUALS VAR":
                 if self.toks[i+2][0:6] == "STRING":
                     self.doASSIGN(self.toks[i],self.toks[i+2])
                 elif self.toks[i+2][0:3] == "NUM":
                     self.doASSIGN(self.toks[i],self.toks[i+2])
                 elif self.toks[i+2][0:4] == "EXPR":
                     self.doASSIGN(self.toks[i],"NUM:" + str(eval(self.toks[i+2][5:])))
+                elif self.toks[i+2][0:3] == "VAR":
+                    self.doASSIGN(self.toks[i],self.getVARIABLE(self.toks[i+2]))
                 i+=3
 
 
