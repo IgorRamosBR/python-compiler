@@ -1,2 +1,4 @@
+PRINT 5 + 10 * ( 2 + 5)
 PRINT "HELLO WORlD"
+PRINT "Igor"
 

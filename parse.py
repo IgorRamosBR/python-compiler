@@ -5,7 +5,7 @@ class Parser(object):
         self.toks = tokens
 
     def verificaPrint(self, i):
-        if (self.toks[i] + " " + self.toks[i+1][0:6] == "PRINT STRING"):
+        if (self.toks[i] + " " + self.toks[i+1][0:6] == "PRINT STRING") or self.toks[i] + " " + self.toks[i+1][0:3] == "PRINT NUM" or self.toks[i] + " " + self.toks[i+1][0:4] == "PRINT EXPR" or self.toks[i] + " " + self.toks[i+1][0:3] == "PRINT VAR":
             return True
 
     def evalExpression(self, expr):
