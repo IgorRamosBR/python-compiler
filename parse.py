@@ -45,7 +45,9 @@ class Parser(object):
     def parse(self):
         i = 0
         while(i < len(self.toks)):
-            if(self.verificaPrint(i)):
+            if self.toks[i] == "ENDIF":
+                i+=1
+            elif(self.verificaPrint(i)):
                 self.doPrint(self.toks[i+1])
                 i += 2
             elif self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:6] == "VAR EQUALS STRING"  or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:3] == "VAR EQUALS NUM" or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:4] == "VAR EQUALS EXPR" or self.toks[i][0:3] + " " + self.toks[i+1] + " " + self.toks[i+2][0:3] == "VAR EQUALS VAR":
@@ -61,6 +63,13 @@ class Parser(object):
             elif self.toks[i] + " " + self.toks[i+1][0:6] + " " + self.toks[i+2][0:3] == "INPUT STRING VAR":
                 self.getINPUT(self.toks[i+1][7:], self.toks[i+2][4:])
                 i+=3
+            elif self.toks[i] + " " + self.toks[i+1][0:3] + " " + self.toks[i+2] + " " + self.toks[i+3][0:3] + " " + self.toks[i+4] == "IF NUM EQEQ NUM THEN":
+      
+               # if self.toks[i+1][4:] == self.toks[i+3][4:]:
+               #     print("True")
+               # else:
+               #     print("false")
+                i+=5
 
 
 

@@ -80,11 +80,17 @@ class Lexer(object):
                     self.varstarted = 0
                 tok = ""
             elif tok == "=" and self.state == 0:
+                if self.expr != "" and self.isexpr == 0:
+                    self.tokens.append("NUM:" + self.expr)
+                    self.expr = ""
                 if self.var != "":
                     self.tokens.append("VAR:" + self.var)
                     self.var = ""
                     self.varstarted = 0
-                self.tokens.append("EQUALS")
+                if self.tokens[-1] == "EQUALS":
+                    self.tokens[-1] = "EQEQ"
+                else:
+                    self.tokens.append("EQUALS")
                 tok = ""
             elif (tok == "$" and self.state == 0):
                 self.varstarted = 1
@@ -100,9 +106,23 @@ class Lexer(object):
                 tok = ""
             elif (self.verificaKeywordPrint(tok)):
                 tok = ""
+            elif tok == "\t":
+                tok = ""  
             elif (self.verificaDelimitadorString(tok)):
                 tok = ""
             elif (self.verificaEAdicionaString(tok)):
+                tok = ""
+            elif tok == "IF" or tok == "if":
+                self.tokens.append("IF")
+                tok = ""
+            elif tok == "ENDIF" or tok == "endif":
+                self.tokens.append("ENDIF")
+                tok = ""
+            elif tok == "THEN" or tok == "then":
+                if self.expr != "" and self.isexpr == 0:
+                    self.tokens.append("NUM:" + self.expr)
+                    self.expr = ""
+                self.tokens.append("THEN")
                 tok = ""
             elif tok == "INPUT" or tok == "input":
                 self.tokens.append("INPUT")
