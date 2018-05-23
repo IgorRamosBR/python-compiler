@@ -38,6 +38,10 @@ class Parser(object):
     def doASSIGN(self, varname, varvalue):
         self.symbols[varname[4:]] = varvalue
 
+    def getINPUT(self, string, varname):
+        i = input(string[1:-1] + " ")
+        self.symbols[varname] = "STRING:\"" + i + "\""
+
     def parse(self):
         i = 0
         while(i < len(self.toks)):
@@ -53,6 +57,9 @@ class Parser(object):
                     self.doASSIGN(self.toks[i],"NUM:" + str(eval(self.toks[i+2][5:])))
                 elif self.toks[i+2][0:3] == "VAR":
                     self.doASSIGN(self.toks[i],self.getVARIABLE(self.toks[i+2]))
+                i+=3
+            elif self.toks[i] + " " + self.toks[i+1][0:6] + " " + self.toks[i+2][0:3] == "INPUT STRING VAR":
+                self.getINPUT(self.toks[i+1][7:], self.toks[i+2][4:])
                 i+=3
 
 

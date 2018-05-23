@@ -104,6 +104,9 @@ class Lexer(object):
                 tok = ""
             elif (self.verificaEAdicionaString(tok)):
                 tok = ""
+            elif tok == "INPUT" or tok == "input":
+                self.tokens.append("INPUT")
+                tok = ""
             elif (self.isNumero(tok)):
                 tok = ""
             elif (self.isOperador(tok)):
