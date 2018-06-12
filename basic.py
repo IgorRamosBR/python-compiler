@@ -158,7 +158,7 @@ def parse(toks):
                 doASSIGN(toks[i],toks[i+2])
             elif toks[i+2][0:4] == "EXPR":
                 doASSIGN(toks[i],"NUM:" + str(evalExpression(toks[i+2][5:])))
-                elif toks[i+2][0:3] == "VAR":
+            elif toks[i+2][0:3] == "VAR":
                 doASSIGN(toks[i],getVARIABLE(toks[i+2]))
             i += 3
         elif toks[i] + " " + toks[i+1][0:6] + " " + toks[i+2][0:3] == "INPUT STRING VAR":
@@ -168,7 +168,7 @@ def parse(toks):
             
             if toks[i+1][4:] == toks[i+3][4:]:
                 print("True")
-            else 
+            else:
                 print ("False")
 
             i += 5
